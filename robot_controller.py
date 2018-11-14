@@ -8,7 +8,6 @@
 
 import socket
 import time
-import sixAxesInverse as sai
 import sys
 ############################################################################################
 
@@ -26,6 +25,7 @@ class RobotController():
         self.sk = socket.socket()
         print('connect...')
         self.sk.connect((self.ip_port))
+        self.send_OK()
 
 
 
@@ -97,6 +97,51 @@ class RobotController():
 
 
 
+    def get_current_car_pos(self):
+        '''
+        向机械臂发送7，机械臂发送六个浮点数，即笛卡尔坐标值。
+
+        返回值：
+        ----------
+        :return:  list
+                笛卡尔坐标值([x,y,z,A,B,C])
+        '''
+        print('SEND:7')
+        self.sk.sendall(bytes(str(7) + ',\0', encoding='utf8'))
+        carpos = []
+        for i in range(6):
+            data = self.sk.recv(7)
+            data.decode('utf8')
+            # print(data)
+            data = str(data, encoding='utf8')
+            # print(data)
+            # carpos.append(round(float(data.split('\\')[0]), 2))
+            carpos.append(float(data))
+            # print(carpos)
+
+        return carpos
+
+
+
+    def move_axis(self, axisPos, prea):
+        """
+        将笛卡尔坐标系转换成关节坐标系后，获取发送字符串。
+
+        参数：
+        ----------
+        :param carPos: list
+                笛卡尔坐标([x,y,z,A,B,C], 精度：两位小数)
+        :param prea:
+
+        返回值：
+        ----------
+        :return:    None
+        """
+        strData = '0,{0},{1},{2},{3},{4},{5},\0'.format(axisPos[0], axisPos[1], axisPos[2], axisPos[3], axisPos[4], axisPos[5])
+        self.sk.sendall(bytes(strData, encoding='utf8'))
+
+
+
     def move_axis_by_offset(self, offset_a1=0, offset_a2=0, offset_a3=0, offset_a4=0, offset_a5=0, offset_a6=0):
         """
         传入关节坐标偏移量控制机械臂移动。
@@ -125,50 +170,6 @@ class RobotController():
 
 
 
-    def move_axis(self, carPos, prea):
-        """
-        将笛卡尔坐标系转换成关节坐标系后，获取发送字符串。
-
-        参数：
-        ----------
-        :param carPos: list
-                笛卡尔坐标([x,y,z,A,B,C], 精度：两位小数)
-        :param prea:
-
-        返回值：
-        ----------
-        :return:    None
-        """
-        self.sk.sendall(bytes(self.car_to_axis_str(carPos, prea), encoding='utf8'))
-
-
-
-    def get_current_car_pos(self):
-        '''
-        向机械臂发送7，机械臂发送六个浮点数，即笛卡尔坐标值。
-
-        返回值：
-        ----------
-        :return:  list
-                笛卡尔坐标值([x,y,z,A,B,C])
-        '''
-        print('SEND:7')
-        self.sk.sendall(bytes(str(7) + ',\0', encoding='utf8'))
-        carpos = []
-        for i in range(6):
-            data = self.sk.recv(7)
-            data.decode('utf8')
-            # print(data)
-            data = str(data, encoding='utf8')
-            # print(data)
-            # carpos.append(round(float(data.split('\\')[0]), 2))
-            carpos.append(float(data))
-            # print(carpos)
-
-        return carpos
-
-
-
     def get_current_axis_pos(self):
         '''
         向机械臂发送6，机械臂回复发送六个浮点数，即关节坐标值。
@@ -193,31 +194,6 @@ class RobotController():
             # print(carpos)
 
         return axispos
-
-
-
-    def car_to_axis_str(self, carPos, prea):
-        """
-        调用sixAxesInverse将世界坐标系转换成关节坐标系，并返回发送字符串。
-
-        参数：
-        ----------
-        :param carPos: list
-                笛卡尔坐标值([x,y,z,A,B,C], 精度：两位小数)
-        :param prea:
-
-        返回值：
-        ----------
-        :return: str
-                关节坐标字符串
-        """
-        inv = sai.Inverse(carPos[0], carPos[1], carPos[2], carPos[3], carPos[4], carPos[5], prea)
-        solution, iloc = inv.inverse()
-        t = solution[iloc]
-        strPos = "0," + str(round(t[0], 2)) + "," + str(round(t[1], 2)) + "," + \
-                       str(round(t[2], 2)) + "," + str(round(t[3], 2)) + "," + str(round(t[4], 5)) + "," + str(
-            round(t[5], 2)) + ",\0"
-        return strPos
 
 
 
@@ -253,7 +229,6 @@ class RobotController():
         '''
         strSend = str(8) + ',' + str(rate) + ',\0'
         self.sk.sendall(bytes(strSend, encoding='utf8'))
-
 
 
 

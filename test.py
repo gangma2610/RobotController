@@ -5,21 +5,6 @@
 # @Site    : 
 # @File    : test.py
 # @Software: PyCharm
-
-"""
-拍摄高度：510
-抓取高度：167.15
-x:[330,530]
-y:[-118,118]
-z:[167.15,510]
-(530,0,510)
-"""
-"""
-green:(513.97,-35.96,231.69)
-orange:(524.35,56.18,188.45)
-camera:3.7cm
-"""
-
 from robot_controller import *
 import time
 import numpy as np
@@ -45,7 +30,6 @@ def main():
     prea = np.array([0, 56, -17, 0, 24, 0])
 
     robot_instance = RobotController()
-    robot_instance.send_OK()
     # robot_instance.move_car_by_offset(offset_C = 180)
     # robot_instance.move_axis_by_offset(offset_a2 = 30)
 
@@ -56,11 +40,11 @@ def main():
     # robot_instance.control_paw(5)
 
     # robot_instance.control_paw(4)
-    robot_instance.set_speed(1)
-    time.sleep(1)
-    # while True:
-    robot_instance.move_car(test_pos)
-    time.sleep(2)
+    # robot_instance.set_speed(1)
+    # time.sleep(1)
+    # # while True:
+    # robot_instance.move_car(test_pos)
+    # time.sleep(2)
     robot_instance.move_car(init_pos)
         # time.sleep(2)
         # robot_instance.set_speed(4)
