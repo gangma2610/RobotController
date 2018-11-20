@@ -64,7 +64,7 @@ class RobotController():
         """
         strData = '1,{0},{1},{2},{3},{4},{5},\0'.format(carPos[0], carPos[1], carPos[2], carPos[3], carPos[4], carPos[5])
         self.sk.sendall(bytes(strData, encoding='utf8'))
-
+        self.delay()
 
 
     def move_car_by_offset(self, offset_x=0, offset_y=0, offset_z=0, offset_A=0, offset_B=0, offset_C=0):
@@ -91,9 +91,8 @@ class RobotController():
         :return:    None
         """
         strData = '3,{0},{1},{2},{3},{4},{5},\0'.format(offset_x, offset_y, offset_z, offset_A, offset_B, offset_C)
-        # strDirection = '3,' + str(offset_x) + ',' + str(offset_y) + ',' + str(offset_z) + ',' + \
-        #     str(offset_A) + ',' + str(offset_B) + ',' + str(offset_C) + '\0'
         self.sk.sendall(bytes(strData, encoding='utf8'))
+        self.delay()
 
 
 
@@ -139,6 +138,7 @@ class RobotController():
         """
         strData = '0,{0},{1},{2},{3},{4},{5},\0'.format(axisPos[0], axisPos[1], axisPos[2], axisPos[3], axisPos[4], axisPos[5])
         self.sk.sendall(bytes(strData, encoding='utf8'))
+        self.delay()
 
 
 
@@ -167,6 +167,7 @@ class RobotController():
         """
         strdata = '2,{0},{1},{2},{3},{4},{5},\0'.format(offset_a1,offset_a2,offset_a3,offset_a4,offset_a5,offset_a6)
         self.sk.sendall(bytes(strdata, encoding='utf8'))
+        self.delay()
 
 
 
@@ -229,6 +230,17 @@ class RobotController():
         '''
         strSend = str(8) + ',' + str(rate) + ',\0'
         self.sk.sendall(bytes(strSend, encoding='utf8'))
+        self.delay()
+
+
+
+    def delay(self):
+        """
+        机械臂移动以及设置速度时使用的延迟函数。
+
+        """
+        recvData = self.sk.recv(5)
+        print(recvData)
 
 
 
