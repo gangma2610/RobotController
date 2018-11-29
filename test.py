@@ -26,7 +26,7 @@ def main():
     robot_instance = RobotController()
 
     # 笛卡尔坐标运动
-    robot_instance.move_car(init_pos)
+    # robot_instance.move_car(init_pos)
     # robot_instance.move_car(test_pos)
     # 关节坐标运动
     # robot_instance.move_axis(init_pos_axis)
@@ -36,7 +36,7 @@ def main():
     # robot_instance.move_axis_by_offset(offset_a2 = 30) # 关节偏移量
 
     # 控制手爪闭合和张开
-    # robot_instance.control_paw(5) # 闭合
+    robot_instance.control_paw(5) # 闭合
     # robot_instance.control_paw(4) # 张开
 
     # 设置机械臂运动速度

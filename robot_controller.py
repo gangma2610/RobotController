@@ -122,7 +122,7 @@ class RobotController():
 
 
 
-    def move_axis(self, axisPos, prea):
+    def move_axis(self, axisPos):
         """
         将笛卡尔坐标系转换成关节坐标系后，获取发送字符串。
 
