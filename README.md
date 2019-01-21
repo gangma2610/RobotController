@@ -1,3 +1,4 @@
+
 # robot_controller.py
 对机械臂控制进行封装。
 ### RobotController
@@ -13,5 +14,8 @@
 
 # test.py
 RobotController使用示例
+
+# Version
+V5.0.1
 
 
